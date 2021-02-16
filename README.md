@@ -1,1 +1,4 @@
-# ajplace-store.github.io
+# ajplace.github.io
+AJplace
+
+Arquivos css e js de QA e Produção
