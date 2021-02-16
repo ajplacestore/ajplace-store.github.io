@@ -1,0 +1,1 @@
+# ajplace-store.github.io
