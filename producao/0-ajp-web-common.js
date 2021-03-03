@@ -4,10 +4,20 @@
 
         let Common = {
             init: function () {
-                Common.testCommon();
+                Common.applyConfigInSearchField();
             },
-            testCommon: () => {
-                console.log('Common load');
+            applyConfigInSearchField: () => {
+                let input = $(".search__input");
+                input.on('click', function () {
+                    $(this).val(' ');
+                });
+                $(document).click(function(event) {
+                    if (!$(event.target).is(".search__input")) {
+                        input.val('');
+                        // let thisInput = $('.search__input')[0];
+                        // thisInput.placeholder = "O QUE VOCÊ DESEJA ENCONTRAR?"; 
+                    }
+                });
             }
         }
 
