@@ -1,7 +1,88 @@
-/**
- * Avanti Comunicação <contato@penseavanti.com.br>
- * almeidajunior
- * @date Mon Mar 01 2021 16:24:39 GMT-0300 (GMT-03:00)
- */
+const prodId = $('#___rc-p-id').attr("value");
+var data = "/api/catalog_system/pub/products/search/?fq=productId:" + prodId + "";
 
-"use strict";!function(){try{var e={init:function(){e.buildBlockImages(),e.applySlickInShelfs()},ajaxStop:function(){var i=$("#txtCep");$(i).attr("placeholder","Calcule o frete"),0<$(".seller-info-more").length?$.getJSON(data,function(i){$.each(i,function(i,e){$(".sellers-list div").remove(),$(".sellers-list a").remove(),$(".topic.Tamanho").remove();var a=e.items;$('<h3 class="specification">Tamanho</h3><ul class="sku-paleative-list"></ul>').appendTo(".sku-selector-container"),$('<div class="seller-list-paleative"><div class="seller-info all-border seller-info--opened" style="display: block !important;"><div class="seller-info--name" style="padding: 20px 10px 20px 50px;">Escolha o seu tamanho para verificar as lojas disponí­veis para venda</div></div></div>').appendTo(".j-product__box.stores"),$(a).each(function(i,e){e=e.Tamanho;$("<li>"+e+"</li>").appendTo(".sku-paleative-list")}),$(".sku-paleative-list li:first-child").addClass("0");a=$(".sku-paleative-list li:nth-child(1)").nextAll();$(".sku-paleative-list").find(a).each(function(i){$(this).addClass(""+(i+1))}),$(".sku-paleative-list li").on("click",function(){var t=$(this);$(".sku-paleative-list li").removeAttr("active"),$(this).attr("active","true");var i=$(this).attr("class"),i=e.items[i].sellers;$(".j-product__box.stores div").remove(),$(i).each(function(i,e){var a=e.sellerName,s=e.addToCartLink,e=e.commertialOffer.AvailableQuantity;$('<div class="seller-info all-border seller-info--opened '+a+'"><div class="seller-info--name"><a class="store-link" quantity="'+e+'" href="'+s+'">'+a+"</a></div></div>").appendTo(".j-product__box.stores"),$(".seller-info").on("click",function(){$(".seller-info").removeClass("active"),$(this).addClass("active")}),1==$(".j-product__box.stores .seller-info").length&&($(".j-product__box.stores .seller-info.ALMEIDA.JUNIOR").addClass("--force--display"),$(".seller-info.ALMEIDA.JUNIOR a.store-link").text("Este produto encontra-se indisponí­vel."),$(".seller-info.ALMEIDA.JUNIOR a.store-link").trigger("click")),$(".store-link").each(function(){$(this).on("click",function(i){i.preventDefault();var e=$(this).attr("href"),i=$(this).attr("quantity");$(t).attr("quantity",i),$(".j-product__box .buy-button").attr("href",e),$(".j-product__box .buy-button").attr("data-href",e)})})})})})}):($(".sellers-list").addClass("force-show"),$(".seller-info").addClass("active"))},buildBlockImages:function(){var i="/api/catalog_system/pub/products/search/?fq=productId:"+$("#___rc-p-id").attr("value");$.ajax({type:"GET",url:i}).done(function(i){e.buildFirstImage(i[0]),e.buildThumbs(i[0]),e.applySlickThumbs()})},buildFirstImage:function(i){var e=i.items[0].images[0],i=e.imageId,e=e.imageText;$('<a id="a-main-image" href="/arquivos/ids/'+i+"-1000-1000/"+e+'.jpg"><img src="/arquivos/ids/'+i+"-486-625/"+e+'.jpg" /></a>').appendTo(".j-product__box--image--image.easyzoom");$(".easyzoom").easyZoom().data("easyZoom")},buildThumbs:function(i){var e=i.items[0].images,i=$(".j-product__box--image--thumbs ul"),a="";e.forEach(function(i){var e=i.imageId,i=i.imageText;a+='<li><a data-standard="/arquivos/ids/'+e+"-486-625/"+i+'.jpg"><img data-id="'+e+'" src="/arquivos/ids/'+e+"-86-86/"+i+'.jpg" /></a></li>'}),i.append(a)},applySlickThumbs:function(){992<$(window).width()&&(5<$("ul.thumbnails li").length&&$("ul.thumbnails").not(".slick-initialized").slick({dots:!1,arrows:!0,vertical:!0,slidesToShow:5,slidesToScroll:1}),$(document).on("click","ul.thumbnails a",function(i){console.log("Cliqueii"),i.preventDefault();i=$(this).attr("data-standard");$(".easyzoom").remove(),$('<div class="j-product__box--image--image easyzoom easyzoom--overlay easyzoom--with-thumbnails is-ready"></div>').insertAfter(".j-product__box--image--thumbs"),$('<a href="'+i+'" id="a-main-image"><img src="'+i+'" /></a>').appendTo(".easyzoom");$(".easyzoom").easyZoom().data("easyZoom")})),$(window).width()<=991&&($(".sku-selector-container").insertBefore(".product-seller"),$(document).on("click","ul.thumbnails a",function(i){var e=$("#a-main-image img"),a=(a=$(this).find("img").attr("src")).replace(/-86-86/g,"-486-625");e.attr("src",a)}))},applySlickInShelfs:function(){$(window).width()<=991?$(".j-shelf ul").length&&($(".j-shelf ul").not(".slick-initialized").slick({dots:!1,arrows:!0,infinite:!0,slidesToShow:1,slidesToScroll:1}),$(".j-shelf ul").each(function(){$(this).find(".slick-arrow").wrapAll('<div class="slick-nav" />')})):$(".j-shelf ul").length&&$(".j-shelf ul").not(".slick-initialized").slick({dots:!0,arrows:!0,infinite:!0,slidesToShow:4,slidesToScroll:4})}};$(document).ready(e.init),$(document).ready(e.ajaxStop)}catch(i){console.log("Erro na instancia [Product]: ",i)}}();
+// MOUNTING PAGE
+$(document).ajaxStop(function () {
+    
+    // CEP Give Placeholder
+    var txtCep = $("#txtCep");
+    $(txtCep).attr("placeholder", "Calcule o frete");
+    
+    if ($('.seller-info-more').length > 0) {
+        // Get Sellers
+        $.getJSON(data, function (data) {
+            $.each(data, function (key, val) {
+                // Remove Avanti Items
+                $('.sellers-list div').remove();
+                $('.sellers-list a').remove();
+                $('.topic.Tamanho').remove();
+
+                // Get Items
+                var ele = val.items;
+                $('<h3 class="specification">Tamanho</h3><ul class="sku-paleative-list"></ul>').appendTo('.sku-selector-container');
+                $('<div class="seller-list-paleative"><div class="seller-info all-border seller-info--opened" style="display: block !important;"><div class="seller-info--name" style="padding: 20px 10px 20px 50px;">Escolha o seu tamanho para verificar as lojas disponí­veis para venda</div></div></div>').appendTo('.j-product__box.stores');
+
+                // Show SKU Atribute
+                $(ele).each(function (key, val) {
+                    var name = val.Tamanho;
+                    $('<li>' + name + '</li>').appendTo('.sku-paleative-list');
+                });
+
+                // Add Class to List Elements
+                $('.sku-paleative-list li:first-child').addClass('0');
+                var except = $('.sku-paleative-list li:nth-child(1)').nextAll();
+                $('.sku-paleative-list').find(except).each(function (el) {
+                    $(this).addClass('' + (el + 1));
+                });
+
+                // Creating Links
+                $('.sku-paleative-list li').on('click', function () {
+                    const state = $(this);
+                    $('.sku-paleative-list li').removeAttr('active');
+                    $(this).attr('active', 'true');
+                    const me = $(this).attr('class');
+                    var myConsult = val.items[me].sellers;
+                    $('.j-product__box.stores div').remove();
+
+                    // Get Name, Link and Quantity
+                    $(myConsult).each(function (key, val) {
+                        var names = val.sellerName;
+                        var links = val.addToCartLink;
+                        var quantity = val.commertialOffer.AvailableQuantity;
+
+                        $('<div class="seller-info all-border seller-info--opened ' + names + '"><div class="seller-info--name"><a class="store-link" quantity="' + quantity + '" href="' + links + '">' + names + '</a></div></div>').appendTo('.j-product__box.stores');
+
+                        $('.seller-info').on('click', function () {
+                            $('.seller-info').removeClass('active');
+                            $(this).addClass('active');
+                        });
+
+                        if ($('.j-product__box.stores .seller-info').length == 1) {
+                            $('.j-product__box.stores .seller-info.ALMEIDA.JUNIOR').addClass('--force--display');
+                            $('.seller-info.ALMEIDA.JUNIOR a.store-link').text('Este produto encontra-se indisponí­vel.');
+                            $('.seller-info.ALMEIDA.JUNIOR a.store-link').trigger('click');
+                        };
+
+                        // Make User Dynamic
+                        $('.store-link').each(function () {
+                            $(this).on('click', function (event) {
+                                event.preventDefault();
+                                var myLink = $(this).attr('href');
+
+                                var enableOrDisable = $(this).attr('quantity');
+
+                                $(state).attr('quantity', enableOrDisable);
+
+                                $('.j-product__box .buy-button').attr('href', myLink);
+                                $('.j-product__box .buy-button').attr('data-href', myLink);
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    } else {
+        $('.sellers-list').addClass('force-show');
+        $('.seller-info').addClass('active');
+    }
+});
