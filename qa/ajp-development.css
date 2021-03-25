@@ -1,4 +1,8 @@
-.ajp-development__shelf .main-shelf h2 {
-  width: 100%; }
+.ajp-development__shelf .main-shelf {
+  display: flex; }
+  .ajp-development__shelf .main-shelf h2 {
+    width: 100%; }
+  .ajp-development__shelf .main-shelf ul li[layout] {
+    width: 100%; }
 
-/*# sourceMappingURL=data:application/json;base64,ewoJInZlcnNpb24iOiAzLAoJImZpbGUiOiAiYXNzZXRzL2Nzcy9hanAtZGV2ZWxvcG1lbnQuY3NzIiwKCSJzb3VyY2VzIjogWwoJCSJhc3NldHMvY3NzL2FqcC1kZXZlbG9wbWVudC5zY3NzIgoJXSwKCSJuYW1lcyI6IFtdLAoJIm1hcHBpbmdzIjogIkFBQUEsQUFFUSx1QkFGZSxDQUNuQixXQUFXLENBQ1AsRUFBRSxDQUFDO0VBQ0MsS0FBSyxFQUFFLElBQUksR0FDZCIKfQ== */
+/*# sourceMappingURL=data:application/json;base64,ewoJInZlcnNpb24iOiAzLAoJImZpbGUiOiAiYXNzZXRzL2Nzcy9hanAtZGV2ZWxvcG1lbnQuY3NzIiwKCSJzb3VyY2VzIjogWwoJCSJhc3NldHMvY3NzL2FqcC1kZXZlbG9wbWVudC5zY3NzIgoJXSwKCSJuYW1lcyI6IFtdLAoJIm1hcHBpbmdzIjogIkFBQUEsQUFDSSx1QkFEbUIsQ0FDbkIsV0FBVyxDQUFDO0VBSVIsT0FBTyxFQUFFLElBQUksR0FNaEI7RUFYTCxBQUVRLHVCQUZlLENBQ25CLFdBQVcsQ0FDUCxFQUFFLENBQUM7SUFDQyxLQUFLLEVBQUUsSUFBSSxHQUNkO0VBSlQsQUFPWSx1QkFQVyxDQUNuQixXQUFXLENBS1AsRUFBRSxDQUNFLEVBQUUsQ0FBQSxBQUFBLE1BQUMsQUFBQSxFQUFRO0lBQ1AsS0FBSyxFQUFFLElBQUksR0FDZCIKfQ== */
