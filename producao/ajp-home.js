@@ -1,21 +1,7 @@
-(function() {
+/**
+ * Avanti Comunicação <contato@penseavanti.com.br>
+ * almeidajunior
+ * @date Fri Apr 30 2021 15:59:43 GMT-0300 (GMT-03:00)
+ */
 
-    try {
-  
-        let Home = {
-            init: function() {
-                Home.bringBanners();
-            },
-            bringBanners: () => {
-                console.log('[bringBanners]');
-            }
-        }
-
-        // Instanciando a funcao
-        $(document).ready(Home.init)
-    
-    } catch (e) {
-        console.log('Erro na instancia [Home]: ', e);
-    }
-
-})();
+"use strict";!function(){try{var o={init:function(){o.buildMainBanners(),o.applySlickInShelfs(),o.throttleScroll(),o.loadImagesByScroll()},buildMainBanners:function(){var o=991<$(window).width(),i=$(window).width()<=991,n=$(".home-mainbanner-desktop"),s=$(".home-mainbanner-mobile");o?(n.find(".box-banner").each(function(){var o=$(this),i=o.find("span[data-src-url]").attr("data-src-url"),i=$('<img src="'+i+'" />');o.find("a").html(i)}),n.slick({autoplay:!0,autoplaySpeed:3e3,slidesToScroll:1,slidesToShow:1,dots:!0,arrows:!1})):i&&(s.find(".box-banner").each(function(){var o=$(this),i=o.find("span[data-src-url]").attr("data-src-url"),i=$('<img src="'+i+'" />');o.find("a").html(i)}),s.slick({autoplay:!0,autoplaySpeed:3e3,slidesToScroll:1,slidesToShow:1,dots:!0,arrows:!1}))},applySlickInShelfs:function(){var o=$(".home-products.home-products-1");o.find("h2").prependTo(o.find(".main-shelf")),$(".home-products-1 .main-shelf > ul, .home-products-3 .main-shelf > ul").not(".slick-initialized").slick({autoplay:!0,dots:!0,infinite:!0,slidesToShow:4,slidesToScroll:4,arrows:!0,responsive:[{breakpoint:992,settings:{slidesToShow:2,slidesToScroll:2,dots:!0}}]}),$(".home-products-2 .main-shelf > ul").not(".slick-initialized").slick({autoplay:!0,dots:!0,infinite:!0,slidesToShow:3,slidesToScroll:3,arrows:!0,responsive:[{breakpoint:992,settings:{slidesToShow:2,slidesToScroll:2,dots:!0}}]})},throttleScroll:function(){var o=void 0;$(document).on("scroll",function(){o=!0}),setInterval(function(){o&&(o=!1,$(window).trigger("ajp.home-throttle-scroll"))},100)},loadImagesByScroll:function(){$(window).on("ajp.home-throttle-scroll",function(o){o.stopPropagation(),450<=window.scrollY&&$(".home-medium-banners").find(".box-banner").each(function(){var o,i=$(this);0!=i.find("span[data-src-url]").length&&(o=i.find("span[data-src-url]").attr("data-src-url"),o=$('<img src="'+o+'" />'),i.find("a").html(o))}),2900<=window.scrollY&&(console.log("PASEIII"),$(".list-seo .loader").hide("fast"),$(".list-seo .banner").attr("src","https://almeidajunior.vteximg.com.br/arquivos/banner-seo.png"),$(".list-seo .banner").removeClass("hide")),$(".home-medium-banners img").attr("src")})}};$(document).ready(o.init)}catch(o){console.log("Erro na instancia [Home]: ",o)}}();
