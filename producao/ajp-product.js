@@ -15,7 +15,7 @@
                 NewProduct.getSimilars();
                 //NewProduct.applyEventButtonToggleCEP();
                 NewProduct.verifyIfBestPrice();
-                NewProduct.closeInfoFreightWhenClickOutside();
+                //NewProduct.closeInfoFreightWhenClickOutside();
                 NewProduct.applyDiscountPerTicket();
                 NewProduct.changeSlideWhenClick();
             },
