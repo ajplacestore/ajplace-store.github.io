@@ -1,7 +1,364 @@
-/**
- * Avanti Comunicação <contato@penseavanti.com.br>
- * almeidajunior
- * @date Mon Mar 15 2021 15:48:48 GMT-0300 (GMT-03:00)
- */
+(function() {
 
-"use strict";!function(){try{var n={init:function(){n.getInfo(),$(document.body).is(".product")&&(n.addProdutcInList(),n.removeProductInList()),n.addShelfProductInList(),n.removeShelfProductInList()},dataUser:null,dataUserEmail:null,dataProduct:{prodId:null,sku:null},dataShelf:{prodId:null,sku:null},getInfo:function(){vtexjs.checkout.getOrderForm().done(function(t){var e=t.clientProfileData;e&&e.email?(t=e.email,n.dataUserEmail=t,$.ajax({type:"GET",url:"/api/dataentities/favoritos/search?_schema=ajp-body&email="+t,dataType:"json",contentType:"application/json",headers:{"Content-Type":"application/json",Accept:"application/vnd.vtex.ds.v10+json"}}).done(function(t){return t.length?(n.dataUser=t[0],n.dataShelf=t[0],$(document.body).is(".product")&&n.setDataInFrontProduct(t[0]),$(document.body).is(".wishlist")&&n.showProductsInFavorites(),n.showProductInShowAlreadyAdd(),void $(".shelf-item__wishlist button").removeClass("list-loaded")):(console.log("Nenhum item na lista..."),void $(".shelf-wishlist--button").removeClass("list-loaded"))})):null!=e&&null!=e.email||($(".shelf-item__wishlist button").removeClass("list-loaded"),$(document.body).is(".wishlist")&&($(".wishlist-products--loader").addClass("hide"),$(".wishlist-products--empty").removeClass("hide")))})},setDataInFrontProduct:function(t){var e=!1;t.userItems.forEach(function(t){t==skuJson.productId&&(e=!0)}),e&&($(".product-wishlist--button.add").addClass("hide"),$(".product-wishlist--button.remove").removeClass("hide"))},addProdutcInList:function(){$(document).one("click",".product-wishlist--button.add",function(t){if(console.log("Clicado!"),null==n.dataUser&&null==n.dataUserEmail)return vtexid.start(),void n.verifyVtexId();var e,s,a=skuJson.productId;null==n.dataUser?(e={email:n.dataUserEmail,userItems:[a]},n.sendPostToMD(e)):n.dataUser&&(s=n.dataUser.userItems,e=n.dataUser.id,(s=s).push(a),s={userItems:s},n.sendPatchToMD(e,s))})},removeProductInList:function(){$(document).one("click",".product-wishlist--button.remove",function(t){if(null==n.dataUser&&null==n.dataUserEmail)return vtexid.start(),void n.verifyVtexId();var e=n.dataUser.userItems,s=n.dataUser.id,e=e.filter(function(t){return t!==skuJson.productId});e.length?(e={userItems:e},n.sendPatchToMD(s,e)):n.deleteListWhenEmpty(s)})},sendPatchToMD:function(t,e){$.ajax({type:"PATCH",url:"/api/dataentities/favoritos/documents/"+t+"?_schema=ajp-body",dataType:"json",contentType:"application/json",headers:{"Content-Type":"application/json",Accept:"application/vnd.vtex.ds.v10+json"},data:JSON.stringify(e)}).done(function(t){swal({title:"Lista de desejos atualizada!",icon:"success"}).then(function(){location.reload()})})},sendPostToMD:function(t){$.ajax({type:"POST",url:"/api/dataentities/favoritos/documents?_schema=ajp-body",dataType:"json",contentType:"application/json",headers:{Accept:"application/vnd.vtex.ds.v10+json","Content-Type":"application/json; charset=utf-8"},data:JSON.stringify(t)}).done(function(t){swal({title:"Sua lista de desejos foi criada!",text:"Confira seus itens salvos na página de favoritos.",icon:"success"}).then(function(){location.reload()})})},showProductsInFavorites:function(){var e,a,t;null!=n.dataUser?(e=$(".wishlist-products--wrapper"),a=null,n.dataUser.userItems.forEach(function(t,e,s){a=0==e?"fq=productId:"+t:a+"&fq=productId:"+t}),t="/buscapagina?"+a+"&PS=50&sl=ff2a9142-b3a3-4bb4-94ed-02884096891f&cc=1&sm=0",$.ajax({type:"GET",url:t}).done(function(t){e.append(t),n.removeShelfProductInListUser(),$(".wishlist-products--loader").hide()})):vtexid.start()},showProductInShowAlreadyAdd:function(){$(".shelf-item__wishlist.shelf-default").each(function(){var t=$(this),e=t.closest(".shelf-item").attr("data-product-id");n.dataShelf.userItems.find(function(t){return t==e})&&(t.find(".shelf-wishlist--button.shelf.add").addClass("hide"),t.find(".shelf-wishlist--button.shelf.remove").removeClass("hide"))})},addShelfProductInList:function(){$(document).one("click",".shelf-wishlist--button.shelf.add",function(t){if(null==n.dataUser&&null==n.dataUserEmail)return vtexid.start(),void n.verifyVtexId();var e,s,a=$(this).closest(".shelf-item").attr("data-product-id"),a=parseInt(a);null==n.dataUser?(e={email:n.dataUserEmail,userItems:[a]},n.sendPostToMD(e)):n.dataUser&&(s=n.dataUser.userItems,e=n.dataUser.id,(s=s).push(a),s={userItems:s},n.sendPatchToMD(e,s))})},removeShelfProductInList:function(){$(document).one("click",".shelf-wishlist--button.shelf.remove",function(t){if(null==n.dataUser&&null==n.dataUserEmail)return vtexid.start(),void n.verifyVtexId();var e=$(this),s=n.dataUser.id,a=e.closest(".shelf-item").attr("data-product-id"),a=parseInt(a),e=n.dataUser.userItems.filter(function(t){return t!==a});e.length?(e={userItems:e},n.sendPatchToMD(s,e)):n.deleteListWhenEmpty(s)})},removeShelfProductInListUser:function(){$(document).one("click",".shelf-wishlist--button.shelf-button--remove.shelf-user",function(t){var e=$(this),s=n.dataUser.id,a=e.closest(".shelf-item").attr("data-product-id"),a=parseInt(a),e=n.dataUser.userItems.filter(function(t){return t!==a});e.length?(e={userItems:e},n.sendPatchToMD(s,e)):n.deleteListWhenEmpty(s)})},deleteListWhenEmpty:function(t){var e=n.headersDelete.headers;$.ajax({headers:e,url:"/api/dataentities/favoritos/documents/"+t,type:"DELETE",dataType:"json",contentType:"application/json"}).done(function(t){swal({title:"Lista de desejos limpa.",icon:"success"}).then(function(){location.reload()})})},reloadClickFunctionsIfCloseModal:function(){$("#dtbot-script").siblings("#vtexIdContainer.ng-scope").find(".vtexIdUI-page.ng-scope.vtexIdUI-confirm-email .close.vtexIdUI-close, .vtexIdUI-page.ng-scope.vtexIdUI-page-active .close.vtexIdUI-close").on("click",function(){n.addProdutcInList(),n.removeProductInList(),n.addShelfProductInList(),n.removeShelfProductInList()})},verifyVtexId:function(){var t=setInterval(function(){$("#vtexIdContainer.ng-scope").length&&(clearInterval(t),n.reloadClickFunctionsIfCloseModal())},50)},headersDelete:{headers:{"Content-Type":"application/json",Accept:"application/vnd.vtex.ds.v10+json","x-vtex-api-appkey":"vtexappkey-almeidajunior-MDITUY","x-vtex-api-apptoken":"CDINPPQASIYVUHBODRPGFEBJPISGACIQPFOHAZUHRRKDZPEDBNMSFIWXBYYGXJAPZHGPSUODWIONUYKZEOEMPQLHIRGBBNJHRUDRJPKHYJWXTJDCOZCIFNAJWYGBOMCI"}}};$(document).ready(n.init)}catch(t){console.log("Erro na instancia [Wishlist]: ",t)}}();
+    try {
+  
+        let Wishlist = {
+            init: function() {
+                Wishlist.getInfo();
+
+                if ($(document.body).is(".product")) {
+                    Wishlist.addProdutcInList();
+                    Wishlist.removeProductInList();
+                }
+
+                // Funcoes de adicionar e remover nas vitrines
+                Wishlist.addShelfProductInList();
+                Wishlist.removeShelfProductInList();
+            },
+            dataUserOrderForm: null,
+            dataUserParsed: null, // Wishlist.dataUserParsed;
+            getInfo: () => {
+                if (localStorage && localStorage.AJP_listUser && localStorage.AJP_listUser.length) {
+                    console.log("Do it A");
+                    let userInfo = JSON.parse(localStorage.AJP_listUser);
+                    Wishlist.dataUserParsed = userInfo; // Seto numa global
+                    if (userInfo.userItems == null) {
+                        console.log("Do it A-1");
+                        Wishlist.emptyListInUserPage();
+                    } 
+                    else if (userInfo.userItems.length) {
+                        console.log("Do it A-2");
+
+                        if ($(document.body).is(".product")) {
+                            Wishlist.setDataInFrontProduct();
+                        }
+
+                        if ($(document.body).is(".wishlist")) {
+                            Wishlist.showProductsInFavorites();
+                        }
+
+                        Wishlist.showProductInShowAlreadyAdd();
+                        $(".shelf-item__wishlist button").removeClass("list-loaded");
+                    }
+                } 
+                else {
+                    console.log("Do it B");
+                    vtexjs.checkout.getOrderForm().done(function(orderForm) {
+                        console.log("vtexjs with request");
+                        if (orderForm.clientProfileData && orderForm.clientProfileData.email != null) {
+                            Wishlist.getInfoByOrderForm(orderForm);
+                        } 
+                        else {
+                            console.log("Email not found");
+                            vtexid.start();
+                            Wishlist.verifyVtexId();
+                            return;
+                        }
+                    });
+                }
+            },
+            getInfoByOrderForm: (orderForm) => {
+                let userEmail = orderForm.clientProfileData.email;
+                $.ajax({
+                    type: "GET",
+                    url: `/api/dataentities/favoritos/search?_schema=ajp-body&email=${userEmail}`,
+                    dataType: "json",
+                    contentType: "application/json",
+                    headers: {
+                        "Accept": "application/vnd.vtex.ds.v10+json", 
+                        "Content-Type": "application/json; charset=utf-8"
+                    }
+                }).done(function (response) {
+                    if (!response.length) {
+                        console.log("Primeira vez no wishlist.");
+
+                        Wishlist.registerEmailInMDFirstTime(orderForm);
+                    } else {
+                        console.log("Usuario com lista");
+
+                        localStorage.setItem("AJP_listUser", JSON.stringify(response[0]));
+                        Wishlist.dataUserParsed = response[0];
+
+                        if ($(document.body).is(".product")) {
+                            Wishlist.setDataInFrontProduct();
+                        }
+
+                        if ($(document.body).is(".wishlist")) {
+                            Wishlist.showProductsInFavorites();
+                        }
+
+                        Wishlist.showProductInShowAlreadyAdd();
+                        $(".shelf-item__wishlist button").removeClass("list-loaded");
+                    }
+                });
+            },
+            registerEmailInMDFirstTime: (orderForm) => {
+                let dataJson = {
+                    email: orderForm.clientProfileData.email,
+                    userItems: null
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/api/dataentities/favoritos/documents?_schema=ajp-body",
+                    dataType: "json",
+                    contentType: "application/json",
+                    headers: { 
+                        "Accept": "application/vnd.vtex.ds.v10+json", 
+                        "Content-Type": "application/json; charset=utf-8" 
+                    },
+                    data: JSON.stringify(dataJson)
+                }).done(function (response) {
+                    dataJson["id"] = response.DocumentId;
+                    localStorage.setItem("AJP_listUser", JSON.stringify(dataJson));
+                });
+            },
+            setDataInFrontProduct: () => {
+                // Verificando se esse produto na PDP ja está na lista de favoritos do usuario e destacando-o
+                let existsItem = false;
+                Wishlist.dataUserParsed.userItems.forEach(item => {
+                    if (item == skuJson.productId) {
+                        existsItem = true;
+                    }
+                });
+
+                // Destaco ele no front
+                if (existsItem) {
+                    $(".product-wishlist--button.add").addClass("hide");
+                    $(".product-wishlist--button.remove").removeClass("hide");
+                } 
+            },
+            showProductsInFavorites: () => {
+                // PAG. Favoritos
+                let wrapperList = $(".wishlist-products--wrapper");
+                let fieldQuery = null;
+
+                // Monto a URL com os produtos do usuario
+                Wishlist.dataUserParsed.userItems.forEach((item, index, arr) => {
+                    if (index == 0) {
+                        fieldQuery = `fq=productId:${item}`;
+                    } else {
+                        fieldQuery = `${fieldQuery}&fq=productId:${item}`;
+                    }
+                });
+                
+                let idShelf = 'ff2a9142-b3a3-4bb4-94ed-02884096891f'; // ID da prateleira
+                let sle = '&cc=1&sm=0'; // config do seller da loja
+                const urlProductsList = `/buscapagina?${fieldQuery}&PS=50&sl=${idShelf}${sle}`;
+                $.ajax({
+                    type: "GET",
+                    url: urlProductsList,
+                }).done(function (responseHtml) {
+                    wrapperList.append(responseHtml);
+                    Wishlist.removeShelfProductInListUser();
+
+                    // Removendo o loader
+                    $(".wishlist-products--loader").hide();
+                });
+            },
+            showProductInShowAlreadyAdd: function () {
+                // Destaca o item que está na lista do usuario na prateleira
+                let wrapperShelfs = $(".shelf-item__wishlist.shelf-default");
+                wrapperShelfs.each(function () {
+                    let $t = $(this);
+                    let thisIdShelf = $t.closest(".shelf-item").attr("data-product-id");
+                    let findItems = Wishlist.dataUserParsed.userItems.find(function(item) {
+                        return item == thisIdShelf;
+                    });
+                    if (findItems) {
+                        $t.find(".shelf-wishlist--button.shelf.add").addClass("hide");
+                        $t.find(".shelf-wishlist--button.shelf.remove").removeClass("hide");
+                    }
+                });
+            },
+            addProdutcInList: function () {
+                // PG PRODUTO
+                let buttonAddProduct = ".product-wishlist--button.add";
+                $(document).one("click", buttonAddProduct, function(event) {   
+                    
+                    let updateList = Wishlist.dataUserParsed.userItems;
+                    if (updateList == null) {
+                        updateList = [skuJson.productId];
+                    } else {
+                        updateList.push(skuJson.productId);
+                    }
+                    let dataJson = {
+                        id: Wishlist.dataUserParsed.id,
+                        email: Wishlist.dataUserParsed.email,
+                        userItems: updateList
+                    }
+
+                    // Atualizo os dados no MD
+                    Wishlist.sendPatchToMD(dataJson);
+                });
+            },
+            addShelfProductInList: function () {
+                // SHELF - ADD
+                let buttonShelfAdd = ".shelf-wishlist--button.shelf.add";
+                $(document).one("click", buttonShelfAdd, function(event) {
+                    let $t = $(this);
+                    let thisIdShelfProduct = $t.closest(".shelf-item").attr("data-product-id");
+                    thisIdShelfProduct = parseInt(thisIdShelfProduct);
+
+                    let updateList = Wishlist.dataUserParsed.userItems;
+                    if (updateList == null) {
+                        updateList = [thisIdShelfProduct];
+                    } else {
+                        updateList.push(thisIdShelfProduct);
+                    }
+                    
+                    let dataJson = {
+                        id: Wishlist.dataUserParsed.id,
+                        email: Wishlist.dataUserParsed.email,
+                        userItems: updateList
+                    }
+
+                    // Atualizo os dados no MD
+                    Wishlist.sendPatchToMD(dataJson);
+                });
+            },
+            removeProductInList: function () {
+                // PG PRODUTO
+                let buttonRemoveProduct = ".product-wishlist--button.remove";
+                $(document).one("click", buttonRemoveProduct, function(event) {
+                    // Removo o item da lista vinda vindo do MD
+                    let listUpdated = Wishlist.dataUserParsed.userItems.filter(function(item) {
+                        return item !== skuJson.productId;
+                    });
+
+                    // Caso zere os produtos na lista
+                    if (!listUpdated.length) {
+                        listUpdated = null;
+                    }
+                    
+                    // Preparo o JSON no formato correto
+                    let dataJson = {
+                        id: Wishlist.dataUserParsed.id,
+                        email: Wishlist.dataUserParsed.email,
+                        userItems: listUpdated
+                    }
+
+                    // Atualizo os dados no MD
+                    Wishlist.sendPatchToMD(dataJson);
+                });
+            },
+            removeShelfProductInList: function () {
+                // SHELF - REMOVE
+                let buttonShelfRemove = ".shelf-wishlist--button.shelf.remove";
+                $(document).one("click", buttonShelfRemove, function(event) {
+                    let $t = $(this);
+                    let thisProdId = $t.closest(".shelf-item").attr("data-product-id");
+                    thisProdId = parseInt(thisProdId);
+
+                    // Removo o item da lista vinda vindo do MD
+                    let listUpdated = Wishlist.dataUserParsed.userItems.filter(function(item) {
+                        return item !== thisProdId;
+                    });
+
+                    // Caso zere os produtos na lista
+                    if (!listUpdated.length) {
+                        listUpdated = null;
+                    } 
+                    
+                    // Preparo o JSON no formato correto
+                    let dataJson = {
+                        id: Wishlist.dataUserParsed.id,
+                        email: Wishlist.dataUserParsed.email,
+                        userItems: listUpdated
+                    }
+
+                    // Atualizo os dados no MD
+                    Wishlist.sendPatchToMD(dataJson);
+                    
+                });
+            },
+            removeShelfProductInListUser: () => {
+                // Remove o item na página de favoritos da lista dos usuarios
+                let buttonShelfs = ".shelf-wishlist--button.shelf-button--remove.shelf-user";
+                $(document).one("click", buttonShelfs, function(event) {
+                    let $t = $(this);
+                    let thisProdId = $t.closest(".shelf-item").attr("data-product-id");
+                    thisProdId = parseInt(thisProdId);
+
+                    // Removo o item da lista vinda vindo do MD
+                    let userItems = Wishlist.dataUserParsed.userItems;
+                    let listUpdated = userItems.filter(function(item) {
+                        return item !== thisProdId;
+                    });
+
+                    // Caso zere os produtos na lista
+                    if (!listUpdated.length) {
+                        listUpdated = null;
+                    }
+                    
+                    // Preparo o JSON no formato correto
+                    let dataJson = {
+                        id: Wishlist.dataUserParsed.id,
+                        email: Wishlist.dataUserParsed.email,
+                        userItems: listUpdated
+                    }
+
+                    // Atualizo os dados no MD
+                    Wishlist.sendPatchToMD(dataJson);
+                });
+            },
+            emptyListInUserPage: () => {
+                $(".shelf-item__wishlist button").removeClass("list-loaded");
+                if ($(document.body).is(".wishlist")) {
+                    $(".wishlist-products--loader").addClass("hide");
+                    $(".wishlist-products--empty").removeClass("hide");
+                }
+            },
+            sendPatchToMD: (dataUpdated) => {
+                let thisId = Wishlist.dataUserParsed.id;
+
+                // Atualiza a lista
+                $.ajax({
+                    type: "PATCH",
+                    url: `/api/dataentities/favoritos/documents/${thisId}?_schema=ajp-body`,
+                    dataType: "json",
+                    contentType: "application/json",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/vnd.vtex.ds.v10+json",
+                    },
+                    data: JSON.stringify(dataUpdated)
+                }).done(function (data) {
+                    localStorage.setItem("AJP_listUser", JSON.stringify(dataUpdated));
+
+                    swal({
+                        title: "Lista de desejos atualizada!",
+                        icon: "success",
+                    }).then(() => {
+                        location.reload();
+                    });
+                });
+            },
+            reloadClickFunctionsIfCloseModal: function () {
+                let find = ".vtexIdUI-page.ng-scope.vtexIdUI-confirm-email .close.vtexIdUI-close, .vtexIdUI-page.ng-scope.vtexIdUI-page-active .close.vtexIdUI-close, .vtexIdUI-page.ng-scope.vtexIdUI-no-permission .close.vtexIdUI-close, .vtexIdUI-page.ng-scope.vtexIdUI-multiple-link-account .close.vtexIdUI-close, .vtexIdUI-page.ng-scope.vtexIdUI-change-pswd .close.vtexIdUI-close";
+                let buttonClose = $("#dtbot-script").siblings("#vtexIdContainer.ng-scope").find(find);
+                buttonClose.on("click", function () {
+                    Wishlist.addProdutcInList();
+                    Wishlist.removeProductInList();
+
+                    Wishlist.addShelfProductInList();
+                    Wishlist.removeShelfProductInList();
+                });
+            },
+            verifyVtexId: function () {
+                let intervalCheck = setInterval(function () {
+                    if ($("#vtexIdContainer.ng-scope").length) {
+                        clearInterval(intervalCheck);
+                        Wishlist.reloadClickFunctionsIfCloseModal();
+                    }
+                }, 50)
+            }
+        }
+
+        // Instanciando a funcao
+        $(document).ready(Wishlist.init)
+    
+    } catch (e) {
+        console.log("Erro na instância do [Wishlist]: ", e);
+    }
+
+})();
