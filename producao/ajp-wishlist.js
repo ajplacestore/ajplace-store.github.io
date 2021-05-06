@@ -173,7 +173,14 @@
             addProdutcInList: function () {
                 // PG PRODUTO
                 let buttonAddProduct = ".product-wishlist--button.add";
-                $(document).one("click", buttonAddProduct, function(event) {   
+                $(document).one("click", buttonAddProduct, function(event) { 
+                    
+                    // if (Wishlist.dataUserParsed == null) {
+                    //     console.log("NULO");
+                    //     // vtexid.start();
+                    //     // Wishlist.verifyVtexId();
+                    //     return;
+                    // }
                     
                     let updateList = Wishlist.dataUserParsed.userItems;
                     if (updateList == null) {
