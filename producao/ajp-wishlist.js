@@ -50,9 +50,9 @@
                         } 
                         else {
                             console.log("Email not found");
-                            vtexid.start();
-                            Wishlist.verifyVtexId();
-                            return;
+                            // vtexid.start();
+                            // Wishlist.verifyVtexId();
+                            // return;
                         }
                     });
                 }
