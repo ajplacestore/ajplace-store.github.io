@@ -5,12 +5,55 @@
         let Home = {
             init: function() {
                 Home.buildMainBanners();
+                Home.buildMainBannersOld();
                 Home.applySlickInShelfs();
                 Home.throttleScroll();
                 Home.loadImagesByScroll();
                 Home.buildPosts();
             },
             buildMainBanners: () => {
+                let conditionDesktop = $(window).width() > 991;
+                let conditionMobilee = $(window).width() <= 991;
+                let wrapperDesktop = $(".ajp-home__mainbanner--wrapper.desktop");
+                let wrapperMobilee = $(".ajp-home__mainbanner--wrapper.mobile");
+                
+                if (conditionDesktop) {
+                    let thisContent = wrapperDesktop.find("noscript").text();
+                    wrapperDesktop.html(thisContent);
+
+                    if (thisContent.match(/box-banner/g).length == 1) {
+                        return;
+                    }
+
+                    wrapperDesktop.slick({
+                        autoplay: true,
+                        autoplaySpeed: 3000,
+                        slidesToScroll: 1,
+                        slidesToShow: 1,
+                        dots: true,
+                        arrows: false
+                    });
+
+                } 
+                else if (conditionMobilee) {
+                    let thisContent = wrapperMobilee.find("noscript").text();
+                    wrapperMobilee.html(thisContent);
+
+                    if (thisContent.match(/box-banner/g).length == 1) {
+                        return;
+                    }
+
+                    wrapperMobilee.slick({
+                        autoplay: true,
+                        autoplaySpeed: 3000,
+                        slidesToScroll: 1,
+                        slidesToShow: 1,
+                        dots: true,
+                        arrows: false
+                    });
+                }
+            },
+            buildMainBannersOld: () => {
                 let conditionDesktop = $(window).width() > 991;
                 let conditionMobilee = $(window).width() <= 991;
                 let wrapperDesktop = $(".home-mainbanner-desktop");
