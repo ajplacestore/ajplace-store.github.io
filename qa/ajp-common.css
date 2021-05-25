@@ -1,8 +1,12 @@
-/* Orion CSS | DESKTOP-EB0OVV3 - 25/05/2021 12:46:22 GMT */
+/* Orion CSS | DESKTOP-EB0OVV3 - 25/05/2021 13:02:31 GMT */
 .ajp-whatsapp {
   position: fixed;
   bottom: 10px;
   left: 10px;
   cursor: pointer;
   background-color: transparent;
+}
+
+.ajp-whatsapp a {
+  display: block;
 }
